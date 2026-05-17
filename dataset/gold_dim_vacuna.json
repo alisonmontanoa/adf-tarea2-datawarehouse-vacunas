@@ -1,0 +1,72 @@
+{
+	"name": "gold_dim_vacuna",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dw_vacunas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "vacuna_key",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "codigo_vacuna",
+				"type": "varchar"
+			},
+			{
+				"name": "nombre_vacuna",
+				"type": "varchar"
+			},
+			{
+				"name": "enfermedad_previene",
+				"type": "varchar"
+			},
+			{
+				"name": "grupo_pai",
+				"type": "varchar"
+			},
+			{
+				"name": "numero_dosis",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "dosis_descripcion",
+				"type": "varchar"
+			},
+			{
+				"name": "edad_aplicacion_descripcion",
+				"type": "varchar"
+			},
+			{
+				"name": "via_administracion",
+				"type": "varchar"
+			},
+			{
+				"name": "sitio_aplicacion",
+				"type": "varchar"
+			},
+			{
+				"name": "dosis_ml",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "condicion_especial",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "gold",
+			"table": "dim_vacuna"
+		}
+	}
+}
