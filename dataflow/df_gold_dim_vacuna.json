@@ -1,0 +1,87 @@
+{
+	"name": "df_gold_dim_vacuna",
+	"properties": {
+		"folder": {
+			"name": "gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "silver_vacunas_pai",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "gold_dim_vacuna",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          codigo_vacuna as string,",
+				"          nombre_vacuna as string,",
+				"          enfermedad_previene as string,",
+				"          grupo_pai as string,",
+				"          numero_dosis as integer,",
+				"          dosis_descripcion as string,",
+				"          edad_aplicacion_descripcion as string,",
+				"          via_administracion as string,",
+				"          sitio_aplicacion as string,",
+				"          dosis_ml as decimal(5,2),",
+				"          condicion_especial as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT DISTINCT\\n    v.vacuna_id AS codigo_vacuna,\\n    v.vacuna_nombre AS nombre_vacuna,\\n    v.enfermedad_previene,\\n    v.grupo_pai,\\n    v.numero_dosis,\\n    v.dosis_descripcion,\\n    v.edad_aplicacion_descripcion,\\n    v.via_administracion,\\n    v.sitio_aplicacion,\\n    v.dosis_ml,\\n    v.condicion_especial\\nFROM silver.vacunas_pai v\\nWHERE v.vacuna_id IS NOT NULL',",
+				"     format: 'query') ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          vacuna_key as integer,",
+				"          codigo_vacuna as string,",
+				"          nombre_vacuna as string,",
+				"          enfermedad_previene as string,",
+				"          grupo_pai as string,",
+				"          numero_dosis as integer,",
+				"          dosis_descripcion as string,",
+				"          edad_aplicacion_descripcion as string,",
+				"          via_administracion as string,",
+				"          sitio_aplicacion as string,",
+				"          dosis_ml as decimal(5,2),",
+				"          condicion_especial as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          codigo_vacuna,",
+				"          nombre_vacuna,",
+				"          enfermedad_previene,",
+				"          grupo_pai,",
+				"          numero_dosis,",
+				"          dosis_descripcion,",
+				"          edad_aplicacion_descripcion,",
+				"          via_administracion,",
+				"          sitio_aplicacion,",
+				"          dosis_ml,",
+				"          condicion_especial",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

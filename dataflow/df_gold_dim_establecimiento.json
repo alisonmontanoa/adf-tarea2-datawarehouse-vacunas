@@ -1,0 +1,93 @@
+{
+	"name": "df_gold_dim_establecimiento",
+	"properties": {
+		"folder": {
+			"name": "gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "silver_establecimientos",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "gold_dim_establecimiento",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          codigo_establecimiento as string,",
+				"          nombre_establecimiento as string,",
+				"          tipo_establecimiento as string,",
+				"          nivel_atencion as integer,",
+				"          zona as string,",
+				"          sedes as string,",
+				"          red_salud as string,",
+				"          departamento as string,",
+				"          municipio as string,",
+				"          latitud as decimal(12,8),",
+				"          longitud as decimal(12,8),",
+				"          tiene_cadena_frio as boolean,",
+				"          activo as boolean",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT DISTINCT\\n    e.establecimiento_id AS codigo_establecimiento,\\n    e.nombre_establecimiento,\\n    e.tipo_establecimiento,\\n    e.nivel_atencion,\\n    e.zona,\\n    e.sedes,\\n    e.red_salud,\\n    e.departamento,\\n    e.municipio,\\n    e.latitud,\\n    e.longitud,\\n    e.tiene_cadena_frio,\\n    e.activo\\nFROM silver.establecimientos e\\nWHERE e.establecimiento_id IS NOT NULL',",
+				"     format: 'query') ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          establecimiento_key as integer,",
+				"          codigo_establecimiento as string,",
+				"          nombre_establecimiento as string,",
+				"          tipo_establecimiento as string,",
+				"          nivel_atencion as integer,",
+				"          zona as string,",
+				"          sedes as string,",
+				"          red_salud as string,",
+				"          departamento as string,",
+				"          municipio as string,",
+				"          latitud as decimal(12,8),",
+				"          longitud as decimal(12,8),",
+				"          tiene_cadena_frio as boolean,",
+				"          activo as boolean",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          codigo_establecimiento,",
+				"          nombre_establecimiento,",
+				"          tipo_establecimiento,",
+				"          nivel_atencion,",
+				"          zona,",
+				"          sedes,",
+				"          red_salud,",
+				"          departamento,",
+				"          municipio,",
+				"          latitud,",
+				"          longitud,",
+				"          tiene_cadena_frio,",
+				"          activo",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

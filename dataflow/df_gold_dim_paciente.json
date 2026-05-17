@@ -1,0 +1,84 @@
+{
+	"name": "df_gold_dim_paciente",
+	"properties": {
+		"folder": {
+			"name": "gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "silver_vacunacion_consolidada",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "gold_dim_paciente",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          cod_paciente as string,",
+				"          documento_identidad as string,",
+				"          nombres as string,",
+				"          primer_apellido as string,",
+				"          segundo_apellido as string,",
+				"          genero as string,",
+				"          fecha_nacimiento as date,",
+				"          municipio as string,",
+				"          comunidad_o_pueblo_indigena as string,",
+				"          es_indigena as boolean",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT DISTINCT\\n    s.cod_paciente,\\n    s.documento_identidad,\\n    s.nombres,\\n    s.primer_apellido,\\n    s.segundo_apellido,\\n    s.genero,\\n    s.fecha_nacimiento,\\n    s.municipio,\\n    s.comunidad_o_pueblo_indigena,\\n    s.es_indigena\\nFROM silver.vacunacion_consolidada s\\nWHERE s.cod_paciente IS NOT NULL',",
+				"     format: 'query') ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          paciente_key as integer,",
+				"          cod_paciente as string,",
+				"          documento_identidad as string,",
+				"          nombres as string,",
+				"          primer_apellido as string,",
+				"          segundo_apellido as string,",
+				"          genero as string,",
+				"          fecha_nacimiento as date,",
+				"          municipio as string,",
+				"          comunidad_o_pueblo_indigena as string,",
+				"          es_indigena as boolean",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          cod_paciente,",
+				"          documento_identidad,",
+				"          nombres,",
+				"          primer_apellido,",
+				"          segundo_apellido,",
+				"          genero,",
+				"          fecha_nacimiento,",
+				"          municipio,",
+				"          comunidad_o_pueblo_indigena,",
+				"          es_indigena",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

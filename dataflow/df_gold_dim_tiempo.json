@@ -1,0 +1,55 @@
+{
+	"name": "df_gold_dim_tiempo",
+	"properties": {
+		"folder": {
+			"name": "gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "silver_vacunacion_consolidada",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          id_registro_origen as string,",
+				"          cod_paciente as string,",
+				"          documento_identidad as string,",
+				"          nombres as string,",
+				"          primer_apellido as string,",
+				"          segundo_apellido as string,",
+				"          genero as string,",
+				"          fecha_nacimiento as date,",
+				"          municipio as string,",
+				"          comunidad_o_pueblo_indigena as string,",
+				"          es_indigena as boolean,",
+				"          fecha_vacunacion as date,",
+				"          cod_vacuna as string,",
+				"          desc_vacuna as string,",
+				"          nro_dosis as integer,",
+				"          cod_establecimiento as string,",
+				"          desc_establecimiento as string,",
+				"          departamento as string,",
+				"          nro_lote as string,",
+				"          temperatura_conservacion as decimal(5,2),",
+				"          edad_dias as integer,",
+				"          via_aplicacion as string,",
+				"          aplicacion_oportuna as boolean,",
+				"          fuente_origen as string,",
+				"          fecha_carga as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1"
+			]
+		}
+	}
+}
